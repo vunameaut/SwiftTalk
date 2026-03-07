@@ -102,6 +102,54 @@ input:focus {
   font-size: 0.82rem;
 }
 
+.voice-bar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  background: #f8faff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.btn-voice {
+  background: #10b981;
+  min-width: 140px;
+}
+
+.btn-voice:hover {
+  background: #059669;
+}
+
+.btn-voice.voice-active {
+  background: #ef4444;
+}
+
+.btn-voice.voice-active:hover {
+  background: #dc2626;
+}
+
+.btn-voice:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.voice-status {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.active-peers {
+  color: var(--muted);
+  font-size: 0.82rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: white;
+}
+
 .nickname-panel {
   display: grid;
   gap: 8px;

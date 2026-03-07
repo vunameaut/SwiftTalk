@@ -26,6 +26,12 @@
         <span id="roomBadge" class="room-badge">Not connected</span>
       </section>
 
+      <section class="voice-bar">
+        <button id="voiceToggleBtn" class="btn btn-voice" disabled>🎤 Start Voice</button>
+        <span id="voiceStatus" class="voice-status">Voice inactive</span>
+        <span id="activePeers" class="active-peers">0 peers connected</span>
+      </section>
+
       <section id="nicknamePanel" class="nickname-panel">
         <label for="nicknameInput">Nickname</label>
         <input id="nicknameInput" type="text" maxlength="30" placeholder="Type your nickname" />
@@ -44,6 +50,7 @@
     </main>
 
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/voice.js"></script>
     <script src="/app.js"></script>
   </body>
 </html>

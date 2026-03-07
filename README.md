@@ -73,9 +73,10 @@ Dành cho các nhà phát triển quan tâm đến Pentest:
 ## 🚀 Lộ trình Phát triển (Roadmap)
 
 - [x] Hoàn thiện giao diện tối giản (phiên bản CSS thuần cho MVP).
+- [x] Voice chat realtime với WebRTC.
 - [ ] Tích hợp Redis để duy trì tin nhắn khi F5 (hiện đang dùng RAM).
 - [ ] Thêm tính năng chia sẻ file/ảnh tự xóa.
-- [ ] Triển khai mã hóa đầu cuối (E2EE).
+- [ ] Triển khai mã hóa đầu cuối (E2EE) cho tin nhắn text.
 
 ---
 
@@ -83,18 +84,23 @@ Dành cho các nhà phát triển quan tâm đến Pentest:
 
 Hiện tại dự án đã được triển khai thành phiên bản MVP với các chức năng chính:
 
+**Chat Features:**
 - Tạo phòng chat qua API `POST /api/rooms` (UUID v4).
 - Join phòng bằng URL `/room/:roomId`.
 - Chat realtime với `Socket.IO` qua event `join_room`, `send_message`, `receive_message`.
 - Lưu lịch sử tin nhắn tạm thời trong RAM theo từng phòng (giới hạn số lượng tin nhắn).
 - Tự động dọn phòng không hoạt động theo TTL.
-- Chống spam cơ bản:
-    - Rate limit cho tạo phòng.
-    - Cooldown giữa các lần gửi tin nhắn.
-- Bảo vệ cơ bản chống XSS bằng sanitize message trước khi broadcast.
 
-## ▶️ 7. Cách chạy dự án
+**Voice Chat Features (NEW):**
+- Voice chat realtime sử dụng WebRTC peer-to-peer.
+- Hỗ trợ nhiều người tham gia voice trong cùng một phòng.
+- Echo cancellation, noise suppression, auto gain control.
+- UI controls: nút bật/tắt mic, hiển thị số lượng peers đang kết nối.
+- Tự động dọn dẹp connections khi người dùng rời phòng.
 
+**Security & Anti-Spam:**
+- Rate limit cho tạo phòng.
+- Cooldown giữa các lần gửi tin nhắn.
 Yêu cầu:
 
 - Node.js 18+
@@ -115,6 +121,8 @@ Kiểm tra nhanh:
 1. Tạo một phòng mới bằng nút `Create Room`.
 2. Copy link phòng và mở thêm 1 tab/trình duyệt khác.
 3. Nhập nickname ở mỗi tab và gửi tin nhắn để xác nhận realtime hoạt động.
+4. **Voice Chat**: Click nút "🎤 Start Voice" để bật microphone và voice chat với người khác trong phòng.
+5. Cho phép quyền truy cập microphone khi trình duyệt yêu cầu.
 
 ## 🧱 8. Cấu trúc dự án sau khi triển khai
 
@@ -122,13 +130,9 @@ Kiểm tra nhanh:
 SwiftTalk/
     .gitignore
     package.json
-    server.js
-    public/
-        index.html
-        style.css
-        app.js
-    README.md
-```
-
----
-*Tài liệu này được tạo tự động cho dự án SwiftTalk.*
+  server.js              # Backend với Socket.IO + WebRTC signaling
+  public/
+    index.html           # UI với chat + voice controls
+    style.css            # Styling cho chat và voice UI
+    app.js               # Chat logic và voice integration
+    voice.js             # WebRTC voice chat engine

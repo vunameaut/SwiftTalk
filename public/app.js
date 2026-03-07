@@ -1,5 +1,8 @@
 const socket = io();
 
+// Voice chat instance
+let voiceChat = null;
+
 const createRoomBtn = document.getElementById("createRoomBtn");
 const copyLinkBtn = document.getElementById("copyLinkBtn");
 const joinRoomBtn = document.getElementById("joinRoomBtn");
@@ -10,6 +13,7 @@ const messageForm = document.getElementById("messageForm");
 const messageInput = document.getElementById("messageInput");
 const messagesEl = document.getElementById("messages");
 const statusText = document.getElementById("statusText");
+const voiceToggleBtn = document.getElementById("voiceToggleBtn");
 
 let currentRoomId = null;
 
@@ -89,6 +93,9 @@ function joinRoom(roomId) {
     roomBadge.textContent = `Room ${roomId.slice(0, 8)}...`;
     setStatus(`Connected as ${nickname}`);
     window.history.replaceState({}, "", `/room/${roomId}`);
+    
+    // Enable voice chat button
+    voiceToggleBtn.disabled = false;
   });
 }
 
@@ -183,6 +190,29 @@ socket.on("receive_message", (message) => {
 
 socket.on("system_message", (message) => {
   addSystemMessage(message.text, message.timestamp);
+});
+
+// Voice chat initialization
+voiceChat = new VoiceChat(socket);
+
+voiceToggleBtn.addEventListener("click", async () => {
+  if (!currentRoomId) {
+    setStatus("Join a room first to use voice chat.");
+    return;
+  }
+
+  try {
+    if (voiceChat.isActive) {
+      voiceChat.stop();
+      setStatus("Voice chat stopped.");
+    } else {
+      await voiceChat.start(currentRoomId);
+      setStatus("Voice chat started. Speak freely!");
+    }
+  } catch (err) {
+    console.error("Voice chat error:", err);
+    setStatus("Voice chat error. Check microphone permissions.");
+  }
 });
 
 // Auto-fill room input from URL when opening a shared room link.

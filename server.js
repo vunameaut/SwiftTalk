@@ -164,6 +164,54 @@ io.on("connection", (socket) => {
     ack({ ok: true });
   });
 
+  socket.on("voice_join", ({ roomId }, ack = () => {}) => {
+    if (!isUuid(roomId)) {
+      ack({ ok: false });
+      return;
+    }
+
+    socket.join(`voice_${roomId}`);
+    socket.to(`voice_${roomId}`).emit("voice_user_joined", {
+      peerId: socket.id,
+      nickname: socket.data.nickname
+    });
+
+    ack({ ok: true, peerId: socket.id });
+  });
+
+  socket.on("voice_offer", ({ to, offer }) => {
+    io.to(to).emit("voice_offer", {
+      from: socket.id,
+      offer,
+      nickname: socket.data.nickname
+    });
+  });
+
+  socket.on("voice_answer", ({ to, answer }) => {
+    io.to(to).emit("voice_answer", {
+      from: socket.id,
+      answer
+    });
+  });
+
+  socket.on("voice_ice_candidate", ({ to, candidate }) => {
+    io.to(to).emit("voice_ice_candidate", {
+      from: socket.id,
+      candidate
+    });
+  });
+
+  socket.on("voice_leave", ({ roomId }) => {
+    if (!roomId) {
+      return;
+    }
+
+    socket.leave(`voice_${roomId}`);
+    socket.to(`voice_${roomId}`).emit("voice_user_left", {
+      peerId: socket.id
+    });
+  });
+
   socket.on("disconnect", () => {
     const roomId = socket.data.roomId;
     if (!roomId) {
@@ -173,6 +221,10 @@ io.on("connection", (socket) => {
     socket.to(roomId).emit("system_message", {
       text: `${socket.data.nickname} left the room.`,
       timestamp: new Date().toISOString()
+    });
+
+    socket.to(`voice_${roomId}`).emit("voice_user_left", {
+      peerId: socket.id
     });
   });
 });
