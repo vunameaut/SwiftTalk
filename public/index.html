@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SwiftTalk</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="app-header">
+        <div>
+          <h1>SwiftTalk</h1>
+          <p>Anonymous realtime chat with temporary rooms.</p>
+        </div>
+        <div class="room-actions">
+          <button id="createRoomBtn" class="btn">Create Room</button>
+          <button id="copyLinkBtn" class="btn btn-muted">Copy Link</button>
+        </div>
+      </header>
+
+      <section class="room-bar">
+        <label for="roomInput">Room ID</label>
+        <input id="roomInput" type="text" placeholder="Paste room UUID to join" />
+        <button id="joinRoomBtn" class="btn">Join</button>
+        <span id="roomBadge" class="room-badge">Not connected</span>
+      </section>
+
+      <section id="nicknamePanel" class="nickname-panel">
+        <label for="nicknameInput">Nickname</label>
+        <input id="nicknameInput" type="text" maxlength="30" placeholder="Type your nickname" />
+      </section>
+
+      <section id="chatArea" class="chat-area" aria-live="polite">
+        <ul id="messages"></ul>
+      </section>
+
+      <form id="messageForm" class="message-form">
+        <input id="messageInput" type="text" maxlength="500" placeholder="Type a message..." autocomplete="off" />
+        <button type="submit" class="btn">Send</button>
+      </form>
+
+      <p id="statusText" class="status-text">Disconnected</p>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>
