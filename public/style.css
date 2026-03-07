@@ -11,6 +11,11 @@
   --gradient-start: #e8f1ff;
   --gradient-mid: #f7f8fb;
   --gradient-end: #edf1fb;
+  --input-bg: #ffffff;
+  --input-border: #d8dce9;
+  --input-text: #1f2430;
+  --input-placeholder: #9ca3af;
+  --meter-bg: #e5e7eb;
 }
 
 [data-theme="dark"] {
@@ -26,6 +31,11 @@
   --gradient-start: #0f172a;
   --gradient-mid: #1e293b;
   --gradient-end: #0f172a;
+  --input-bg: #0f172a;
+  --input-border: #334155;
+  --input-text: #f1f5f9;
+  --input-placeholder: #64748b;
+  --meter-bg: #1e293b;
 }
 
 * {
@@ -85,15 +95,23 @@ body {
 }
 
 input {
-  border: 1px solid var(--line);
+  border: 1px solid var(--input-border);
   border-radius: 10px;
   padding: 10px;
   font-size: 0.95rem;
+  background: var(--input-bg);
+  color: var(--input-text);
+  transition: all 0.2s ease;
+}
+
+input::placeholder {
+  color: var(--input-placeholder);
 }
 
 input:focus {
   outline: 2px solid var(--accent-soft);
   border-color: var(--accent);
+  background: var(--surface);
 }
 
 .btn {
@@ -245,11 +263,12 @@ input:focus {
 
 .audio-meter {
   height: 40px;
-  background: #e5e7eb;
+  background: var(--meter-bg);
   border-radius: 8px;
   overflow: hidden;
   position: relative;
   margin-bottom: 12px;
+  transition: background 0.3s ease;
 }
 
 .audio-level {
