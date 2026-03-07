@@ -104,13 +104,22 @@ input:focus {
 
 .voice-bar {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto auto 1fr auto;
   gap: 10px;
   align-items: center;
   padding: 10px;
   background: #f8faff;
   border: 1px solid var(--line);
   border-radius: 10px;
+}
+
+.btn-test {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-test:hover {
+  background: #2563eb;
 }
 
 .btn-voice {
@@ -148,6 +157,83 @@ input:focus {
   border-radius: 999px;
   padding: 4px 8px;
   background: white;
+}
+
+.mic-test-panel {
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.mic-test-panel.hidden {
+  display: none;
+}
+
+.test-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.test-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.btn-close {
+  border: 0;
+  background: transparent;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.btn-close:hover {
+  color: var(--ink);
+}
+
+.test-instruction {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.audio-meter {
+  height: 40px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.audio-level {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+  width: 0%;
+  transition: width 0.05s ease-out;
+  border-radius: 8px;
+}
+
+.mic-status {
+  margin: 8px 0;
+  font-size: 0.88rem;
+  color: var(--ink);
+  font-weight: 600;
+  text-align: center;
+}
+
+.test-controls {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .nickname-panel {

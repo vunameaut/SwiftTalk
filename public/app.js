@@ -3,6 +3,9 @@ const socket = io();
 // Voice chat instance
 let voiceChat = null;
 
+// Mic tester instance
+let micTester = null;
+
 const createRoomBtn = document.getElementById("createRoomBtn");
 const copyLinkBtn = document.getElementById("copyLinkBtn");
 const joinRoomBtn = document.getElementById("joinRoomBtn");
@@ -194,6 +197,9 @@ socket.on("system_message", (message) => {
 
 // Voice chat initialization
 voiceChat = new VoiceChat(socket);
+
+// Mic tester initialization
+micTester = new MicTester();
 
 voiceToggleBtn.addEventListener("click", async () => {
   if (!currentRoomId) {

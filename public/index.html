@@ -28,8 +28,24 @@
 
       <section class="voice-bar">
         <button id="voiceToggleBtn" class="btn btn-voice" disabled>🎤 Start Voice</button>
+        <button id="testMicBtn" class="btn btn-test">🎙️ Test Mic</button>
         <span id="voiceStatus" class="voice-status">Voice inactive</span>
         <span id="activePeers" class="active-peers">0 peers connected</span>
+      </section>
+
+      <section id="micTestPanel" class="mic-test-panel hidden">
+        <div class="test-header">
+          <h3>🎙️ Microphone Test</h3>
+          <button id="closeMicTest" class="btn-close">✕</button>
+        </div>
+        <p class="test-instruction">Speak into your microphone. You should see the meter move and hear yourself.</p>
+        <div class="audio-meter">
+          <div id="audioLevel" class="audio-level"></div>
+        </div>
+        <p id="micStatus" class="mic-status">Initializing...</p>
+        <div class="test-controls">
+          <button id="stopMicTest" class="btn btn-muted">Stop Test</button>
+        </div>
       </section>
 
       <section id="nicknamePanel" class="nickname-panel">
@@ -51,6 +67,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/voice.js"></script>
+    <script src="/mictest.js"></script>
     <script src="/app.js"></script>
   </body>
 </html>
