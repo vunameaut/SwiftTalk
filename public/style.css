@@ -6,6 +6,26 @@
   --line: #d8dce9;
   --accent: #2563eb;
   --accent-soft: #dbeafe;
+  --chat-bg: #fbfcff;
+  --voice-bg: #f8faff;
+  --gradient-start: #e8f1ff;
+  --gradient-mid: #f7f8fb;
+  --gradient-end: #edf1fb;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --ink: #f1f5f9;
+  --muted: #94a3b8;
+  --line: #334155;
+  --accent: #3b82f6;
+  --accent-soft: #1e3a5f;
+  --chat-bg: #0f1729;
+  --voice-bg: #1a2332;
+  --gradient-start: #0f172a;
+  --gradient-mid: #1e293b;
+  --gradient-end: #0f172a;
 }
 
 * {
@@ -17,7 +37,8 @@ body {
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: var(--ink);
-  background: radial-gradient(circle at top left, #e8f1ff, #f7f8fb 45%, #edf1fb);
+  background: radial-gradient(circle at top left, var(--gradient-start), var(--gradient-mid) 45%, var(--gradient-end));
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .app-shell {
@@ -30,6 +51,7 @@ body {
   padding: 18px;
   display: grid;
   gap: 14px;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .app-header {
@@ -82,6 +104,7 @@ input:focus {
   color: #fff;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .btn:hover {
@@ -89,8 +112,21 @@ input:focus {
 }
 
 .btn-muted {
-  background: #e5e7eb;
-  color: #1f2937;
+  background: var(--line);
+  color: var(--ink);
+}
+
+.btn-theme {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 1.2rem;
+  padding: 8px 12px;
+  min-width: 44px;
+}
+
+.btn-theme:hover {
+  background: var(--line);
+  transform: scale(1.05);
 }
 
 .room-badge {
@@ -108,9 +144,10 @@ input:focus {
   gap: 10px;
   align-items: center;
   padding: 10px;
-  background: #f8faff;
+  background: var(--voice-bg);
   border: 1px solid var(--line);
   border-radius: 10px;
+  transition: background 0.3s ease;
 }
 
 .btn-test {
@@ -156,15 +193,17 @@ input:focus {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 4px 8px;
-  background: white;
+  background: var(--surface);
+  transition: background 0.3s ease;
 }
 
 .mic-test-panel {
   border: 2px solid var(--accent);
   border-radius: 12px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  background: var(--voice-bg);
   padding: 16px;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+  transition: background 0.3s ease;
 }
 
 .mic-test-panel.hidden {
@@ -245,11 +284,12 @@ input:focus {
 .chat-area {
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fbfcff;
+  background: var(--chat-bg);
   min-height: 360px;
   max-height: 420px;
   overflow: auto;
   padding: 12px;
+  transition: background 0.3s ease;
 }
 
 #messages {
@@ -261,10 +301,11 @@ input:focus {
 }
 
 .message {
-  border: 1px solid #d8def0;
+  border: 1px solid var(--line);
   border-radius: 10px;
-  background: #fff;
+  background: var(--surface);
   padding: 8px 10px;
+  transition: background 0.3s ease;
 }
 
 .message-head {

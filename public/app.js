@@ -17,8 +17,32 @@ const messageInput = document.getElementById("messageInput");
 const messagesEl = document.getElementById("messages");
 const statusText = document.getElementById("statusText");
 const voiceToggleBtn = document.getElementById("voiceToggleBtn");
+const themeToggle = document.getElementById("themeToggle");
 
 let currentRoomId = null;
+
+// Theme management
+function getTheme() {
+  return localStorage.getItem("theme") || "light";
+}
+
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("theme", theme);
+  themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+  themeToggle.title = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
+}
+
+function toggleTheme() {
+  const currentTheme = getTheme();
+  const newTheme = currentTheme === "dark" ? "light" : "dark";
+  setTheme(newTheme);
+}
+
+// Initialize theme on load
+setTheme(getTheme());
+
+themeToggle.addEventListener("click", toggleTheme);
 
 function getRoomIdFromPath() {
   const parts = window.location.pathname.split("/").filter(Boolean);
