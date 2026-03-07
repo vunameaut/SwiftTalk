@@ -105,15 +105,34 @@ function joinRoom(roomId) {
 async function createRoom() {
   setStatus("Creating room...");
 
-  const response = await fetch("/api/rooms", { method: "POST" });
-  const data = await response.json();
+  try {
+    const response = await fetch("/api/rooms", { 
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Create room failed:", response.status, errorText);
+      setStatus(`Failed to create room: ${response.status}`);
+      return;
+    }
 
-  if (!response.ok || !data.roomId) {
-    setStatus(data?.error || "Cannot create room right now.");
-    return;
+    const data = await response.json();
+
+    if (!data.roomId) {
+      console.error("No roomId in response:", data);
+      setStatus(data?.error || "Cannot create room right now.");
+      return;
+    }
+
+    joinRoom(data.roomId);
+  } catch (error) {
+    console.error("Network error:", error);
+    setStatus("Network error while creating room. Check console.");
   }
-
-  joinRoom(data.roomId);
 }
 
 createRoomBtn.addEventListener("click", async () => {
@@ -166,6 +185,7 @@ messageForm.addEventListener("submit", (event) => {
 });
 
 socket.on("connect", () => {
+  console.log("Socket connected with ID:", socket.id);
   setStatus("Socket connected.");
 
   const roomIdFromPath = getRoomIdFromPath();
@@ -175,9 +195,15 @@ socket.on("connect", () => {
 });
 
 socket.on("disconnect", () => {
+  console.log("Socket disconnected");
   setStatus("Socket disconnected.");
   roomBadge.textContent = "Not connected";
   currentRoomId = null;
+});
+
+socket.on("connect_error", (error) => {
+  console.error("Socket connection error:", error);
+  setStatus("Connection error. Check console.");
 });
 
 socket.on("room_history", (messages) => {
