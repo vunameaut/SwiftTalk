@@ -30,6 +30,13 @@
       <section class="voice-bar">
         <button id="voiceToggleBtn" class="btn btn-voice" disabled>🎤 Start Voice</button>
         <button id="testMicBtn" class="btn btn-test">🎙️ Test Mic</button>
+        <div class="noise-suppression-control">
+          <label class="toggle-label">
+            <input type="checkbox" id="noiseSuppressionToggle" checked />
+            <span class="toggle-switch"></span>
+            <span class="toggle-text">🔇 Lọc âm (Krisp)</span>
+          </label>
+        </div>
         <span id="voiceStatus" class="voice-status">Voice inactive</span>
         <span id="activePeers" class="active-peers">0 peers connected</span>
       </section>
@@ -39,13 +46,17 @@
           <h3>🎙️ Microphone Test</h3>
           <button id="closeMicTest" class="btn-close">✕</button>
         </div>
-        <p class="test-instruction">Speak into your microphone. You should see the meter move and hear yourself.</p>
+        <p class="test-instruction">Nói vào micro. Bạn sẽ thấy thanh âm lượng và nghe lại giọng của mình.</p>
         <div class="audio-meter">
           <div id="audioLevel" class="audio-level"></div>
         </div>
         <p id="micStatus" class="mic-status">Initializing...</p>
         <div class="test-controls">
-          <button id="stopMicTest" class="btn btn-muted">Stop Test</button>
+          <label class="playback-toggle">
+            <input type="checkbox" id="playbackToggle" checked />
+            <span>🔊 Nghe lại giọng (Discord style)</span>
+          </label>
+          <button id="stopMicTest" class="btn btn-muted">Dừng Test</button>
         </div>
       </section>
 
