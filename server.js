@@ -3,7 +3,7 @@ const http = require("http");
 const path = require("path");
 const { Server } = require("socket.io");
 const rateLimit = require("express-rate-limit");
-const { v4: uuidv4, validate: isUuid } = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 
 const PORT = Number(process.env.PORT || 3001);
 const ROOM_TTL_MS = 2 * 60 * 60 * 1000;
@@ -45,6 +45,19 @@ const roomCreationLimiter = rateLimit({
 });
 
 const rooms = new Map();
+const ROOM_ID_REGEX = /^[a-zA-Z0-9_-]{3,32}$/;
+
+function normalizeRoomId(input) {
+  if (typeof input !== "string") {
+    return "";
+  }
+
+  return input.trim();
+}
+
+function isValidRoomId(roomId) {
+  return ROOM_ID_REGEX.test(roomId);
+}
 
 function sanitizeMessage(input) {
   if (typeof input !== "string") {
@@ -93,8 +106,23 @@ function cleanupRooms() {
 
 setInterval(cleanupRooms, 5 * 60 * 1000).unref();
 
-app.post("/api/rooms", roomCreationLimiter, (_req, res) => {
-  const roomId = uuidv4();
+app.post("/api/rooms", roomCreationLimiter, (req, res) => {
+  const roomId = normalizeRoomId(req.body?.roomId);
+
+  if (!isValidRoomId(roomId)) {
+    res.status(400).json({
+      error: "Invalid room ID. Use 3-32 characters: letters, numbers, '_' or '-'."
+    });
+    return;
+  }
+
+  if (rooms.has(roomId)) {
+    res.status(409).json({
+      error: "Room ID already exists. Please choose another one."
+    });
+    return;
+  }
+
   getOrCreateRoom(roomId);
   res.status(201).json({ roomId });
 });
@@ -118,24 +146,25 @@ io.on("connection", (socket) => {
   socket.data.lastMessageAt = 0;
 
   socket.on("join_room", ({ roomId, nickname }, ack = () => {}) => {
-    if (!isUuid(roomId)) {
+    const normalizedRoomId = normalizeRoomId(roomId);
+    if (!isValidRoomId(normalizedRoomId)) {
       ack({ ok: false, error: "Invalid room ID." });
       return;
     }
 
     const cleanName = sanitizeMessage(String(nickname || "Guest")).slice(0, 30) || "Guest";
-    const room = getOrCreateRoom(roomId);
+    const room = getOrCreateRoom(normalizedRoomId);
 
     if (socket.data.roomId) {
       socket.leave(socket.data.roomId);
     }
 
-    socket.join(roomId);
+    socket.join(normalizedRoomId);
     socket.data.nickname = cleanName;
-    socket.data.roomId = roomId;
+    socket.data.roomId = normalizedRoomId;
 
     socket.emit("room_history", room.messages);
-    socket.to(roomId).emit("system_message", {
+    socket.to(normalizedRoomId).emit("system_message", {
       text: `${cleanName} joined the room.`,
       timestamp: new Date().toISOString()
     });
@@ -184,13 +213,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("voice_join", ({ roomId }, ack = () => {}) => {
-    if (!isUuid(roomId)) {
+    const normalizedRoomId = normalizeRoomId(roomId);
+    if (!isValidRoomId(normalizedRoomId)) {
       ack({ ok: false });
       return;
     }
 
-    socket.join(`voice_${roomId}`);
-    socket.to(`voice_${roomId}`).emit("voice_user_joined", {
+    socket.join(`voice_${normalizedRoomId}`);
+    socket.to(`voice_${normalizedRoomId}`).emit("voice_user_joined", {
       peerId: socket.id,
       nickname: socket.data.nickname
     });

@@ -127,6 +127,12 @@ function joinRoom(roomId) {
 }
 
 async function createRoom() {
+  const requestedRoomId = roomInput.value.trim();
+  if (!requestedRoomId) {
+    setStatus("Enter a room ID before creating.");
+    return;
+  }
+
   setStatus("Creating room...");
 
   try {
@@ -134,17 +140,17 @@ async function createRoom() {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({ roomId: requestedRoomId })
     });
-    
+
+    const data = await response.json().catch(() => ({}));
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Create room failed:", response.status, errorText);
-      setStatus(`Failed to create room: ${response.status}`);
+      console.error("Create room failed:", response.status, data);
+      setStatus(data?.error || `Failed to create room: ${response.status}`);
       return;
     }
-
-    const data = await response.json();
 
     if (!data.roomId) {
       console.error("No roomId in response:", data);
